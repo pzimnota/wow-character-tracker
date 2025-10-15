@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: wow_postgres
+    environment:
+      POSTGRES_DB: wow
+      POSTGRES_USER: wow
+      POSTGRES_PASSWORD: wow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U wow -d wow" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  pgdata:

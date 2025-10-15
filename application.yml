@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: wow-character-tracker
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+    time-zone: UTC
+    serialization:
+      write_dates_as_timestamps: false
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/wow}
+    username: ${DB_USER:wow}
+    password: ${DB_PASS:wow}
+  threads:
+    virtual:
+      enabled: true
+  flyway:
+    clean-disabled: true
+  cache:
+    cache-names: realms
+    caffeine:
+      spec: maximumSize=100, expireAfterWrite=6h
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+battlenet:
+  clientId: ${BN_CLIENT_ID:}
+  clientSecret: ${BN_CLIENT_SECRET:}
+  region: eu
+  locale: pl_PL
