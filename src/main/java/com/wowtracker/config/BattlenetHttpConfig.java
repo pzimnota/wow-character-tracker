@@ -4,33 +4,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
+import java.util.Locale;
+
 
 @Configuration
 public class BattlenetHttpConfig {
 
     @Bean
-    RestClient battlenetClient(RestClient.Builder builder, BattlenetProperties properties){
-        String base = switch (properties.region()){
-            case eu -> "https://eu.battle.net";
-            case us -> "https://us.battle.net";
-            case kr -> "https://kr.battle.net";
-            case tw -> "https://tw.battle.net";
-        };
-
-
+    RestClient battlenetClient(RestClient.Builder builder){
         return builder
-                .baseUrl(base)
+                .baseUrl("https://oauth.battle.net")
                 .build();
     }
 
     @Bean
     RestClient blizzardApiClient(RestClient.Builder builder, BattlenetProperties properties){
-        String base = switch (properties.region()){
-            case eu -> "https://eu.battle.net";
-            case us -> "https://us.battle.net";
-            case kr -> "https://kr.battle.net";
-            case tw -> "https://tw.battle.net";
-        };
+        String regionCode = properties.region().name().toLowerCase(Locale.ROOT);
+        String base = "https://" + regionCode + ".api.blizzard.com";
         return builder
                 .baseUrl(base)
                 .build();

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wowtracker.domain.entity.Region;
 import com.wowtracker.domain.entity.WowCharacter;
 import com.wowtracker.service.CharacterService;
+import com.wowtracker.service.RealmService;
 import com.wowtracker.web.dto.CreateCharacterRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CharacterController.class)
 @ActiveProfiles("test")
 public class CharacterControllerTest {
+
     @Autowired
     MockMvc mvc;
 
@@ -41,6 +44,14 @@ public class CharacterControllerTest {
     @MockitoBean
     CharacterService service;
 
+    @MockitoBean
+    RealmService realmService;
+
+
+    @BeforeEach
+    public void setup() {
+        when(realmService.isValidRealmSlug(any(), anyString())).thenReturn(true);
+    }
 
     @Test
     void create_returns201_andLocation() throws Exception{

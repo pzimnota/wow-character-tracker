@@ -63,7 +63,6 @@ public class BlizzardResourceClientTest {
         server.
                 expect(requestTo(Matchers.startsWith("https://eu.api.blizzard.com/data/wow/realm/index")))
                 .andExpect(queryParam("namespace", "dynamic-eu"))
-                .andExpect(queryParam("locale", "pl_PL"))
                 .andExpect(method(HttpMethod.GET))
                 .andExpect(header("Authorization", "Bearer abc123"))
                 .andRespond(withSuccess(

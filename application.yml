@@ -36,7 +36,7 @@ management:
       show-details: when_authorized
 
 battlenet:
-  clientId: ${BN_CLIENT_ID:}
-  clientSecret: ${BN_CLIENT_SECRET:}
+  clientId: ${BNET_CLIENT_ID:}
+  clientSecret: ${BNET_CLIENT_SECRET:}
   region: eu
   locale: pl_PL

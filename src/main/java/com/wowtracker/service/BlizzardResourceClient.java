@@ -23,20 +23,46 @@ public class BlizzardResourceClient {
         this.properties = properties;
         }
 
-//        public RealmIndexResponse getRealmIndex(){
-//        return getRealmIndex(properties.region());
-//        }
 
         public RealmIndexResponse getRealmIndex(Region region){
         var regionCode = region.name().toLowerCase(Locale.ROOT);
+        var locale = resolveLocaleFor(region, (properties.locale()));
         return api.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/data/wow/realm/index")
                         .queryParam("namespace", "dynamic-" + regionCode)
-                        .queryParam("locale", properties.locale())
+                        .queryParam("locale", locale)
                         .build())
                 .headers(httpHeaders -> httpHeaders.setBearerAuth(authClient.getAccessToken()))
                 .retrieve()
                 .body(RealmIndexResponse.class);
+    }
+
+    private String resolveLocaleFor(Region region, Locale configured) {
+        if (configured == null) {
+            return switch (region) {
+                case eu -> "en_GB";
+                case us -> "en_US";
+                case kr -> "ko_KR";
+                case tw -> "zh_TW";
+            };
+        }
+
+        var code = configured.toString();
+        return switch (region) {
+            case eu -> isSupported(code, "en_GB", "de_DE", "es_ES", "fr_FR", "it_IT", "pt_PT", "ru_RU")
+                    ? code : "en_GB";
+            case us -> isSupported(code, "en_US", "es_MX", "pt_BR")
+                    ? code : "en_US";
+            case kr -> "ko_KR";
+            case tw -> "zh_TW";
+        };
+    }
+
+    private boolean isSupported(String code, String... supported) {
+        for (var s : supported) {
+            if (s.equalsIgnoreCase(code)) return true;
+        }
+        return false;
     }
 }
